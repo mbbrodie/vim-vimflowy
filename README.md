@@ -7,8 +7,8 @@ The Vim-Vimflowy plugin mimics the basic zoom in/out behavior of Vimflowy, while
 At any point during editing -- no matter how far zoomed in/out -- you can type `:w`or `ZZ` to save the entire document. For now, `vi [mydocument.txt]` will reopen the document at the highest level.
 
 ### Usage 
-- `]` will focus on a block (current line and any subsequent lines with indentation > current line)
-- `[` will return to parent.
+- `<leader>m` will magnify a block (current line and any subsequent lines with indentation > current line)
+- `<leader>M` will return to parent.
 
 Saving at any focus level will save the entire document safely. 
 
