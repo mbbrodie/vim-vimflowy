@@ -1,4 +1,8 @@
+" vimflowy.vim
+" Mike Brodie
+"
 " ****************************************************************************
+" ORIGINAL LICENSE
 " File:             narrow.vim
 " Author:           Jonas Kramer
 " Version:          0.1
@@ -28,7 +32,7 @@ let g:narrowedBuffers = []
 set cpoptions&vim
 
 
-fu! narrow#Narrow(rb, re)
+fu! vimflowy#Narrow(rb, re)
 	"if exists('b:narrowData')
 	"    echo "Buffer is already narrowed. Widen first, then select a new region."
 	"else
@@ -66,7 +70,7 @@ fu! narrow#Narrow(rb, re)
 endf
 
 
-fu! narrow#Widen()
+fu! vimflowy#Widen()
 	if len(g:narrowedBuffers) > 0
 		" Save modified state.
 		let modified = &l:modified
@@ -105,7 +109,7 @@ endf
 
 " Function to use instead of Vims builting save command, so we can save the
 " whole buffer instead of only the narrowed region in it as Vim would do.
-fu! narrow#Save()
+fu! vimflowy#Save()
 	let name = bufname("%")
 
 	if exists('g:narrowedBuffers')
@@ -159,8 +163,8 @@ fu! s:safeUndo()
 endf
 
 
-command! -bar -range Narrow call narrow#Narrow(<line1>, <line2>)
-command! -bar Widen call narrow#Widen()
+command! -bar -range Narrow call vimflowy#Narrow(<line1>, <line2>)
+command! -bar Widen call vimflowy#Widen()
 
 silent! nnoremap <silent> u  :<C-u>call <SID>safeUndo()<CR>
 
