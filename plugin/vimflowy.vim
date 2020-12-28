@@ -33,40 +33,38 @@ set cpoptions&vim
 
 
 fu! vimflowy#Narrow(rb, re)
-	"if exists('b:narrowData')
-	"    echo "Buffer is already narrowed. Widen first, then select a new region."
-	"else
-		" Save modified state.
-		let modified = &l:modified
+	
+	" Save modified state.
+	let modified = &l:modified
 
-		let narrowData = { "pre": [], "post": [] }
+	let narrowData = { "pre": [], "post": [] }
 
 
-		" Store buffer contents and remove everything outside the range.
-		if a:re < line("$")
-			let narrowData["post"] = getline(a:re + 1, "$")
-			exe "silent " . (a:re + 1) . ",$d _"
-		end
+	" Store buffer contents and remove everything outside the range.
+	if a:re < line("$")
+		let narrowData["post"] = getline(a:re + 1, "$")
+		exe "silent " . (a:re + 1) . ",$d _"
+	end
 
-		if a:rb > 1
-			let narrowData["pre"] = getline(1, a:rb - 1)
-			exe "silent 1," . (a:rb - 1) . "d _"
-		end
-		let g:narrowedBuffers = add(g:narrowedBuffers, narrowData)
+	if a:rb > 1
+		let narrowData["pre"] = getline(1, a:rb - 1)
+		exe "silent 1," . (a:rb - 1) . "d _"
+	end
+	let g:narrowedBuffers = add(g:narrowedBuffers, narrowData)
 
-		let narrowData["change"] = changenr()
+	let narrowData["change"] = changenr()
 
-		augroup plugin-narrow
-			au BufWriteCmd <buffer> call vimflowy#Save()
-		augroup END
+	augroup plugin-narrow
+		au BufWriteCmd <buffer> call vimflowy#Save()
+	augroup END
 
-		" If buffer wasn't modified, unset modified flag.
-		if !modified
-			setlocal nomodified
-		en
+	" If buffer wasn't modified, unset modified flag.
+	if !modified
+		setlocal nomodified
+	en
 
-		echo "Narrowed. Be careful with undo/time travelling."
-	"endi
+	echo "Narrowed. Be careful with undo/time travelling."
+
 endf
 
 
@@ -103,7 +101,7 @@ fu! vimflowy#Widen()
 		echo "Buffer restored."
 	else
 		echo "No buffer to widen."
-	endi
+	endif
 endf
 
 
@@ -140,7 +138,7 @@ fu! vimflowy#Save()
 		setlocal nomodified
 
 		echo "Whee! I really hope that file is saved now!"
-	endi
+	endif
 endf
 
 
@@ -191,5 +189,6 @@ function SelectIndent()
 endfunction		
 nnoremap vip :call SelectIndent()<CR>
 
-map [ :Widen<CR>
-map ] vip <bar> :Narrow<CR>
+let mapleader = ","
+map <leader>M :Widen<CR>
+map <leader>m vip <bar> :Narrow<CR>
