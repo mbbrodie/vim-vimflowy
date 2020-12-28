@@ -30,7 +30,7 @@ Place the code block below in your `~/.vimrc` to allow the following shortcuts:
 - `<leader>b` to 'pop' off and go to the most recent previous file
 - `<leader>f` to go forward again (after going back)
 
-(You can attain similar behavior with <C-o> and <C-S-^>, but I find these helpful for jumping between files).
+(You can attain similar behavior with `<C-o>` and `<C-S-^>`, but I find these helpful for jumping between files).
 
 ```
 let g:filestack = []
