@@ -24,11 +24,11 @@ Plug 'mbbrodie/vim-vimflowy'
 Download and place plugin/vimflowy.vim in ~/.vim/plugins/vimflowy.vim
 
 ### Optional Filepath stack
-I prefer small files and tend to use `gf` to navigate to other files containing similar vimflowy-like structure
+I prefer small files and tend to use `gf` to navigate to other files containing similar vimflowy-like structure.
 Place the code block below in your `~/.vimrc` to allow the following shortcuts:
-- <leader>g to goto a file
-- <leader>b to 'pop' off and go to the most recent previous file
-- <leader>f to go forward again (after going back)
+- `<leader>g` to goto a file
+- `<leader>b` to 'pop' off and go to the most recent previous file
+- `<leader>f` to go forward again (after going back)
 
 (You can attain similar behavior with <C-o> and <C-S-^>, but I find these helpful for jumping between files).
 
