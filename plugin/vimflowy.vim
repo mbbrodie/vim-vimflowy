@@ -57,7 +57,7 @@ fu! vimflowy#Narrow(rb, re)
 		let narrowData["change"] = changenr()
 
 		augroup plugin-narrow
-			au BufWriteCmd <buffer> call narrow#Save()
+			au BufWriteCmd <buffer> call vimflowy#Save()
 		augroup END
 
 		" If buffer wasn't modified, unset modified flag.
