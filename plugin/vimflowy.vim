@@ -33,38 +33,56 @@ set cpoptions&vim
 
 
 fu! vimflowy#Narrow(rb, re)
-	
-	" Save modified state.
-	let modified = &l:modified
+	"if exists('b:narrowData')
+	"    echo "Buffer is already narrowed. Widen first, then select a new region."
+	"else
+		" Save modified state.
+		let modified = &l:modified
 
-	let narrowData = { "pre": [], "post": [] }
+		let narrowData = { "pre": [], "post": [] , "indent": 0}
+		let cur_line = line(".")
+	    let cur_ind = indent(cur_line)
+		let narrowData["indent"] = cur_ind
+		let line =  cur_line - a:rb - 1
 
 
-	" Store buffer contents and remove everything outside the range.
-	if a:re < line("$")
-		let narrowData["post"] = getline(a:re + 1, "$")
-		exe "silent " . (a:re + 1) . ",$d _"
-	end
+		" indent reports # of spaces.
+			
+		" Store buffer contents and remove everything outside the range.
+		if a:re < line("$")
+			let narrowData["post"] = getline(a:re + 1, "$")
+			exe "silent " . (a:re + 1) . ",$d _"
+		end
 
-	if a:rb > 1
-		let narrowData["pre"] = getline(1, a:rb - 1)
-		exe "silent 1," . (a:rb - 1) . "d _"
-	end
-	let g:narrowedBuffers = add(g:narrowedBuffers, narrowData)
+		if a:rb > 1
+			let narrowData["pre"] = getline(1, a:rb - 1)
+			exe "silent 1," . (a:rb - 1) . "d _"
+		end
+		
+		let g:narrowedBuffers = add(g:narrowedBuffers, narrowData)
 
-	let narrowData["change"] = changenr()
+		
+		"let narrowData["change"] = changenr()
 
-	augroup plugin-narrow
-		au BufWriteCmd <buffer> call vimflowy#Save()
-	augroup END
+		augroup plugin-narrow
+			au BufWriteCmd <buffer> call vimflowy#Save()
+		augroup END
 
-	" If buffer wasn't modified, unset modified flag.
-	if !modified
-		setlocal nomodified
-	en
 
-	echo "Narrowed. Be careful with undo/time travelling."
+		if narrowData["indent"] > 0
+			let b:idx = 0
+			while b:idx < narrowData["indent"]/&tabstop
+				%s/\v^\t//
+				let b:idx += 1
+			endwhile
+		endif
+		exe "normal " . line . "G"
 
+		" If buffer wasn't modified, unset modified flag.
+		if !modified
+			setlocal nomodified
+		en
+	"endi
 endf
 
 
@@ -80,7 +98,14 @@ fu! vimflowy#Widen()
 		" Calculate cursor position based of the length of the inserted
 		" content, so the cursor doesn't move when widening.
 		let pos[1] = pos[1] + len(b:narrowData["pre"])
-
+		
+		if b:narrowData["indent"] > 0
+			let b:idx = 0
+			while b:idx < b:narrowData["indent"]/&tabstop
+				%s/\v^/\t/
+				let b:idx += 1
+			endwhile
+		endif
 		call append(0, b:narrowData["pre"])
 		call append(line('$'), b:narrowData["post"])
 
@@ -98,7 +123,6 @@ fu! vimflowy#Widen()
 		call setpos('.', pos)
 		unlet b:narrowData
 
-		echo "Buffer restored."
 	else
 		echo "No buffer to widen."
 	endif
@@ -137,7 +161,6 @@ fu! vimflowy#Save()
 		call writefile(content, name)
 		setlocal nomodified
 
-		echo "Whee! I really hope that file is saved now!"
 	endif
 endf
 
@@ -145,7 +168,7 @@ endf
 " Wrapper around :undo to make sure the user doesn't undo the :Narrow command,
 " which would break :Widen.
 fu! s:safeUndo()
-        if exists('b:narrowData')
+        if exists('b:2narrowData')
 		let pos = getpos(".")
 
 		silent undo
@@ -192,3 +215,4 @@ nnoremap vip :call SelectIndent()<CR>
 let mapleader = ","
 map <leader>M :Widen<CR>
 map <leader>m vip <bar> :Narrow<CR>
+

@@ -1,8 +1,9 @@
 Per the requirements of the Artistic License 2.0, here are the changes to the original narrow.vim script:
 - Add global list variable to serve as a stack. When calling Narrow(), we push a dictionary containing PRE/POST blocks onto the stack. This allows repeated calls to Narrow() -- unlike the original version. Calls to Widen() will pop a data dictionary off the stack in LIFO order.
 - Add function to auto-select an area based on indentation. 
-- Map ']' to Narrow() and '[' to Widen() functions.
+- Map '<leader>m' to Narrow() and '<leader>M' to Widen() functions.
 - Saving at any level of focus unwraps and saves the entire document.
+- Narrowed regions are automatically shifted to the left (so that the top line has no indentation). Widening will restore the indentation before adding the PRE/POST text blocks)
 
 We include a number of other helper shortcuts for folding or jumping files, but these are described in the README and not part of the current plugin implementation.
 
