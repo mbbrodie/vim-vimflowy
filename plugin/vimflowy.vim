@@ -65,14 +65,14 @@ fu! vimflowy#Narrow(rb, re)
 		"let narrowData["change"] = changenr()
 
 		augroup plugin-narrow
-			au BufWriteCmd <buffer> call vimflowy#Save()
+		 au BufWriteCmd <buffer> call vimflowy#Save()
 		augroup END
 
 
 		if narrowData["indent"] > 0
 			let b:idx = 0
 			while b:idx < narrowData["indent"]/&tabstop
-				%s/\v^\t//
+				silent! %s/\v^\t//e
 				let b:idx += 1
 			endwhile
 		endif
@@ -80,8 +80,8 @@ fu! vimflowy#Narrow(rb, re)
 
 		" If buffer wasn't modified, unset modified flag.
 		if !modified
-			setlocal nomodified
-		en
+			set nomodified
+		endif
 	"endi
 endf
 
@@ -102,7 +102,7 @@ fu! vimflowy#Widen()
 		if b:narrowData["indent"] > 0
 			let b:idx = 0
 			while b:idx < b:narrowData["indent"]/&tabstop
-				%s/\v^/\t/
+				silent! %s/\v^/\t/e
 				let b:idx += 1
 			endwhile
 		endif
@@ -117,7 +117,7 @@ fu! vimflowy#Widen()
 		" If buffer wasn't modified, unset modified flag.
 		if !modified
 			setlocal nomodified
-		en
+		endif
 
 		" Restore cursor position.
 		call setpos('.', pos)
@@ -147,7 +147,7 @@ fu! vimflowy#Save()
 		while len(g:narrowedBuffers) > 0
 			let b:narrowDataTmp = remove(g:narrowedBuffers, -1)
 			let g:updatedGBuffer = add(g:updatedGBuffer,b:narrowDataTmp)
-			if len(g:updatedGBuffer) < 1
+			if len(g:updatedGBuffer) < 2
 				let content = copy(b:narrowDataTmp.pre)
 				let content = extend(content, copy(getline(1, "$")))
 				let content = extend(content, copy(b:narrowDataTmp.post))
